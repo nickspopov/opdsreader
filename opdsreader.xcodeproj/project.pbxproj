@@ -8,22 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		4B55A7A72962EF20004F5D48 /* opdsreaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7A62962EF20004F5D48 /* opdsreaderApp.swift */; };
-		4B55A7A92962EF20004F5D48 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7A82962EF20004F5D48 /* Persistence.swift */; };
 		4B55A7AC2962EF20004F5D48 /* opdsreader.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7AA2962EF20004F5D48 /* opdsreader.xcdatamodeld */; };
 		4B55A7AE2962EF20004F5D48 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7AD2962EF20004F5D48 /* ContentView.swift */; };
 		4B55A7B02962EF21004F5D48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B55A7AF2962EF21004F5D48 /* Assets.xcassets */; };
 		4B55A7B42962EF21004F5D48 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B55A7B32962EF21004F5D48 /* Preview Assets.xcassets */; };
+		4B55A7BC2962F0EF004F5D48 /* ReadiumOPDS in Frameworks */ = {isa = PBXBuildFile; productRef = 4B55A7BB2962F0EF004F5D48 /* ReadiumOPDS */; };
+		4B55A7C02962F70B004F5D48 /* OpdsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7BF2962F70B004F5D48 /* OpdsService.swift */; };
+		4B55A7C32962FC00004F5D48 /* SearchScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7C22962FC00004F5D48 /* SearchScreenViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4B55A7A32962EF20004F5D48 /* opdsreader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = opdsreader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B55A7A62962EF20004F5D48 /* opdsreaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = opdsreaderApp.swift; sourceTree = "<group>"; };
-		4B55A7A82962EF20004F5D48 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		4B55A7AB2962EF20004F5D48 /* opdsreader.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = opdsreader.xcdatamodel; sourceTree = "<group>"; };
 		4B55A7AD2962EF20004F5D48 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4B55A7AF2962EF21004F5D48 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B55A7B12962EF21004F5D48 /* opdsreader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = opdsreader.entitlements; sourceTree = "<group>"; };
 		4B55A7B32962EF21004F5D48 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		4B55A7BD2962F464004F5D48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		4B55A7BF2962F70B004F5D48 /* OpdsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpdsService.swift; sourceTree = "<group>"; };
+		4B55A7C22962FC00004F5D48 /* SearchScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScreenViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B55A7BC2962F0EF004F5D48 /* ReadiumOPDS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,8 +61,10 @@
 		4B55A7A52962EF20004F5D48 /* opdsreader */ = {
 			isa = PBXGroup;
 			children = (
+				4B55A7C12962FBE0004F5D48 /* ViewModels */,
+				4B55A7BE2962F6F8004F5D48 /* Services */,
+				4B55A7BD2962F464004F5D48 /* Info.plist */,
 				4B55A7A62962EF20004F5D48 /* opdsreaderApp.swift */,
-				4B55A7A82962EF20004F5D48 /* Persistence.swift */,
 				4B55A7AD2962EF20004F5D48 /* ContentView.swift */,
 				4B55A7AF2962EF21004F5D48 /* Assets.xcassets */,
 				4B55A7B12962EF21004F5D48 /* opdsreader.entitlements */,
@@ -73,6 +80,22 @@
 				4B55A7B32962EF21004F5D48 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4B55A7BE2962F6F8004F5D48 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				4B55A7BF2962F70B004F5D48 /* OpdsService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4B55A7C12962FBE0004F5D48 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				4B55A7C22962FC00004F5D48 /* SearchScreenViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -91,6 +114,9 @@
 			dependencies = (
 			);
 			name = opdsreader;
+			packageProductDependencies = (
+				4B55A7BB2962F0EF004F5D48 /* ReadiumOPDS */,
+			);
 			productName = opdsreader;
 			productReference = 4B55A7A32962EF20004F5D48 /* opdsreader.app */;
 			productType = "com.apple.product-type.application";
@@ -119,6 +145,9 @@
 				Base,
 			);
 			mainGroup = 4B55A79A2962EF20004F5D48;
+			packageReferences = (
+				4B55A7BA2962F0EF004F5D48 /* XCRemoteSwiftPackageReference "swift-toolkit" */,
+			);
 			productRefGroup = 4B55A7A42962EF20004F5D48 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -148,7 +177,8 @@
 				4B55A7AC2962EF20004F5D48 /* opdsreader.xcdatamodeld in Sources */,
 				4B55A7A72962EF20004F5D48 /* opdsreaderApp.swift in Sources */,
 				4B55A7AE2962EF20004F5D48 /* ContentView.swift in Sources */,
-				4B55A7A92962EF20004F5D48 /* Persistence.swift in Sources */,
+				4B55A7C32962FC00004F5D48 /* SearchScreenViewModel.swift in Sources */,
+				4B55A7C02962F70B004F5D48 /* OpdsService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,6 +306,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = opdsreader/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -313,6 +345,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = opdsreader/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -360,6 +394,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4B55A7BA2962F0EF004F5D48 /* XCRemoteSwiftPackageReference "swift-toolkit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/readium/swift-toolkit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4B55A7BB2962F0EF004F5D48 /* ReadiumOPDS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B55A7BA2962F0EF004F5D48 /* XCRemoteSwiftPackageReference "swift-toolkit" */;
+			productName = ReadiumOPDS;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		4B55A7AA2962EF20004F5D48 /* opdsreader.xcdatamodeld */ = {
