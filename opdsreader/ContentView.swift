@@ -10,32 +10,8 @@ import CoreData
 import ReadiumOPDS
 
 struct ContentView: View {
-    @StateObject var viewModel = SearchScreenViewModel()
-    
-    func onTapItem(book: Book) {
-        if let _link = book.link {
-            UIApplication.shared.open(_link)
-        }
-    }
-    
     var body: some View {
-        NavigationStack {
-            Group {
-                if viewModel.loading == false {
-                    List(viewModel.list, id: \.title) { _item in
-                        HStack {
-                            Button(action: {onTapItem(book: _item)}) {
-                                Text(_item.title)
-                                    .foregroundColor(.primary)
-                            }
-                        }
-                    }
-                } else {
-                    ProgressView()
-                }
-            }.navigationTitle("List")
-        }
-        .searchable(text: $viewModel.searchValue)
+        SearchScreen()
     }
 }
 
