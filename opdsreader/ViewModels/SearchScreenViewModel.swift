@@ -13,6 +13,7 @@ import Combine
     @Published var list: [Book] = []
     @Published var searchValue = ""
     @Published var loading = false
+    @Published var fetchingMore = false
     
     private var disposeBag = Set<AnyCancellable>()
 
@@ -38,6 +39,27 @@ import Combine
                     self.list = books!
                 }
                 self.loading = false
+            }
+        }
+    }
+    
+    func fetchMore() {
+        let shouldFetchMore = self.list.count % 20 == 0 && !self.loading
+        
+        if !shouldFetchMore {
+            return
+        }
+        
+        self.fetchingMore = true
+        
+        let nextPageNumber = self.list.count / 20 + 1
+        
+        OpdsService.shared.searchByTitle(searchQuery: self.searchValue, pageNumber: nextPageNumber) { books, error in
+            DispatchQueue.main.async {
+                if(books != nil) {
+                    self.list.append(contentsOf: books!)
+                }
+                self.fetchingMore = false
             }
         }
     }

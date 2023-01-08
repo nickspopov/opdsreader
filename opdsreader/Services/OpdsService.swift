@@ -9,9 +9,10 @@ import Foundation
 import ReadiumOPDS
 import R2Shared
 
-struct Book: Identifiable {
+struct Book: Identifiable, Equatable {
     var id = UUID()
     var title: String
+    var author: String?
     var image: URL?
     var description: String
     var link: URL?
@@ -43,11 +44,23 @@ class OpdsService {
         return _links
     }
     
-    func searchByTitle(searchQuery: String, completion: @escaping ([Book]?, NSError?) -> Void) {
+    static public func getAuthor(authors: [Contributor]?) -> String {
+        var authorsString = ""
+        
+        if let _authors = authors {
+            _authors.forEach { _author in
+                authorsString = authorsString + _author.name + " "
+            }
+        }
+        
+        return authorsString
+    }
+    
+    func searchByTitle(searchQuery: String, pageNumber: Int = 0, completion: @escaping ([Book]?, NSError?) -> Void) {
         
         if let _searchQuery =  searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             
-            let requestLink = "http://flibusta.net/opds/opensearch?searchType=books&pageNumber=0&searchTerm=" + _searchQuery
+            let requestLink = "http://flibusta.net/opds/opensearch?searchType=books" + "&pageNumber=" + String(pageNumber) + "&searchTerm=" + _searchQuery
             
             OPDS1Parser.parseURL(url: URL(string: requestLink)!) { parseData, error in
                 if(error != nil) {
@@ -57,6 +70,7 @@ class OpdsService {
                     let bookArray = parseData?.feed?.publications.map {
                         Book(
                             title: $0.metadata.title,
+                            author: OpdsService.getAuthor(authors: $0.metadata.authors),
                             image: ($0.images.first != nil) ? URL(string: $0.images[0].href) : nil,
                             description: $0.metadata.description ?? "No description",
                             link: OpdsService.getDownloadLink(links: $0.links),
