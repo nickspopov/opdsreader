@@ -14,7 +14,7 @@ struct SearchScreen: View {
     
     @State var detailsBook: Book? = nil
     
-    func onTapItem(book: Book) {
+    func onTapItem(_ book: Book) {
         detailsBook = book
     }
     
@@ -23,41 +23,12 @@ struct SearchScreen: View {
             Group {
                 if viewModel.loading == false {
                     List(viewModel.list) { _item in
-                        HStack {
-                            Button(action: {
-                                onTapItem(book: _item)
-                            }) {
-                                HStack{
-                                    if _item.image != nil {
-                                        AsyncImage(
-                                            url: _item.image,
-                                            content: { image in
-                                                image.resizable()
-                                                     .aspectRatio(contentMode: .fit)
-                                                     .frame(width: 40, height: 40)
-                                            },
-                                            placeholder: {
-                                                ProgressView()
-                                                    .frame(width: 40, height: 40)
-                                            }
-                                        )
-                                    }
-                                    VStack(alignment: .leading){
-                                        Text(_item.title)
-                                            .foregroundColor(.primary)
-                                        Text(_item.author ?? "")
-                                            .font(.system(size: 12))
-                                            .foregroundColor(.primary.opacity(0.4))
-                                    }
-                                    Spacer()
+                        SearchItem(book: _item, onTapItem: onTapItem)
+                            .onAppear {
+                                if viewModel.list.last == _item {
+                                    viewModel.fetchMore()
                                 }
                             }
-                        }
-                        .onAppear {
-                            if viewModel.list.last == _item {
-                                viewModel.fetchMore()
-                            }
-                        }
                     }
                     if viewModel.fetchingMore {
                         ProgressView()

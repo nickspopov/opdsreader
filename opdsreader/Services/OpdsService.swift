@@ -14,7 +14,7 @@ struct Book: Identifiable, Equatable {
     var title: String
     var author: String?
     var image: URL?
-    var description: String
+    var description: String?
     var link: URL?
     var allLinks: [URL]?
 }
@@ -69,7 +69,7 @@ class OpdsService {
                 if(parseData != nil) {
                     let bookArray = parseData?.feed?.publications.map {
                         Book(
-                            title: $0.metadata.title,
+                            title: $0.metadata.title.trimmingCharacters(in: .whitespacesAndNewlines),
                             author: OpdsService.getAuthor(authors: $0.metadata.authors),
                             image: ($0.images.first != nil) ? URL(string: $0.images[0].href) : nil,
                             description: $0.metadata.description ?? "No description",

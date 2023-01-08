@@ -54,7 +54,7 @@ struct BookDetailsScreen: View {
                     .font(.title)
                 VStack(alignment: .leading){
                     HStack {
-                        Text(book.description)
+                        Text(book.description ?? "No description")
                             .font(.body)
                             .multilineTextAlignment(.leading)
                         Spacer()
