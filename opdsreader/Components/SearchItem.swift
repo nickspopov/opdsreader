@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CachedAsyncImage
 
 struct SearchItem: View {
     
@@ -19,12 +20,12 @@ struct SearchItem: View {
             }) {
                 HStack{
                     if book.image != nil {
-                        AsyncImage(url: book.image) { phase in
+                        CachedAsyncImage(url: book.image) { phase in
                             if let image = phase.image {
                                 image.resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 40, height: 40)
-                            } else if phase.error != nil {
+                            } else if phase.error != nil {  
                                 Color.brown
                                     .frame(width: 40, height: 40)
                             } else {

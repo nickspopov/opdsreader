@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4B1C86A5296B228E00759BA9 /* SearchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1C86A4296B228E00759BA9 /* SearchItem.swift */; };
 		4B1C86A7296B745E00759BA9 /* EmptyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1C86A6296B745E00759BA9 /* EmptyImage.swift */; };
+		4B1C86AA296C3B7000759BA9 /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 4B1C86A9296C3B7000759BA9 /* CachedAsyncImage */; };
 		4B2D4AF12968DEE200F82DFC /* SearchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2D4AF02968DEE200F82DFC /* SearchScreen.swift */; };
 		4B2D4AF32968DF2D00F82DFC /* BookDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2D4AF22968DF2D00F82DFC /* BookDetailsScreen.swift */; };
 		4B55A7A72962EF20004F5D48 /* opdsreaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7A62962EF20004F5D48 /* opdsreaderApp.swift */; };
@@ -44,6 +45,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B55A7BC2962F0EF004F5D48 /* ReadiumOPDS in Frameworks */,
+				4B1C86AA296C3B7000759BA9 /* CachedAsyncImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +146,7 @@
 			name = opdsreader;
 			packageProductDependencies = (
 				4B55A7BB2962F0EF004F5D48 /* ReadiumOPDS */,
+				4B1C86A9296C3B7000759BA9 /* CachedAsyncImage */,
 			);
 			productName = opdsreader;
 			productReference = 4B55A7A32962EF20004F5D48 /* opdsreader.app */;
@@ -175,6 +178,7 @@
 			mainGroup = 4B55A79A2962EF20004F5D48;
 			packageReferences = (
 				4B55A7BA2962F0EF004F5D48 /* XCRemoteSwiftPackageReference "swift-toolkit" */,
+				4B1C86A8296C3B7000759BA9 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 			);
 			productRefGroup = 4B55A7A42962EF20004F5D48 /* Products */;
 			projectDirPath = "";
@@ -428,6 +432,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4B1C86A8296C3B7000759BA9 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-cached-async-image";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		4B55A7BA2962F0EF004F5D48 /* XCRemoteSwiftPackageReference "swift-toolkit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/readium/swift-toolkit.git";
@@ -439,6 +451,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4B1C86A9296C3B7000759BA9 /* CachedAsyncImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B1C86A8296C3B7000759BA9 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
+			productName = CachedAsyncImage;
+		};
 		4B55A7BB2962F0EF004F5D48 /* ReadiumOPDS */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4B55A7BA2962F0EF004F5D48 /* XCRemoteSwiftPackageReference "swift-toolkit" */;
