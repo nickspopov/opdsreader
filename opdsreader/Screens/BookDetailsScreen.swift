@@ -23,6 +23,10 @@ struct BookDetailsScreen: View {
         }
     }
     
+    func onLinkPress(link: URL) {
+        UIApplication.shared.open(link)
+    }
+    
     var body: some View {
         VStack {
             HStack{
@@ -68,8 +72,12 @@ struct BookDetailsScreen: View {
                 .padding()
                 VStack{
                     ForEach(book.allLinks ?? [], id: \.absoluteString) { _link in
-                        Text(_link.absoluteString)
-                            .hAlign(.leading)
+                        Button(action: {
+                            onLinkPress(link: _link)
+                        }) {
+                            Text(_link.absoluteString)
+                                .hAlign(.leading)
+                        }
                     }
                 }.padding()
             }

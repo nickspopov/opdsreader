@@ -21,6 +21,7 @@
 		4B55A7C02962F70B004F5D48 /* OpdsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7BF2962F70B004F5D48 /* OpdsService.swift */; };
 		4B55A7C32962FC00004F5D48 /* SearchScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7C22962FC00004F5D48 /* SearchScreenViewModel.swift */; };
 		4B8102112971CCB100A7BC2B /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8102102971CCB100A7BC2B /* View+Extension.swift */; };
+		4B8DE05429740802008C4E23 /* MediaType+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8DE05329740802008C4E23 /* MediaType+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		4B55A7BF2962F70B004F5D48 /* OpdsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpdsService.swift; sourceTree = "<group>"; };
 		4B55A7C22962FC00004F5D48 /* SearchScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScreenViewModel.swift; sourceTree = "<group>"; };
 		4B8102102971CCB100A7BC2B /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
+		4B8DE05329740802008C4E23 /* MediaType+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MediaType+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				4B8102102971CCB100A7BC2B /* View+Extension.swift */,
+				4B8DE05329740802008C4E23 /* MediaType+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -221,6 +224,7 @@
 				4B55A7AC2962EF20004F5D48 /* opdsreader.xcdatamodeld in Sources */,
 				4B8102112971CCB100A7BC2B /* View+Extension.swift in Sources */,
 				4B55A7A72962EF20004F5D48 /* opdsreaderApp.swift in Sources */,
+				4B8DE05429740802008C4E23 /* MediaType+Extension.swift in Sources */,
 				4B55A7AE2962EF20004F5D48 /* ContentView.swift in Sources */,
 				4B2D4AF32968DF2D00F82DFC /* BookDetailsScreen.swift in Sources */,
 				4B55A7C32962FC00004F5D48 /* SearchScreenViewModel.swift in Sources */,

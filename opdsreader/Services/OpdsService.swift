@@ -29,6 +29,12 @@ class OpdsService {
         if let zipLink = links.first(withMediaType: .zip) {
             return URL(string: zipLink.href)
         }
+        if let djvuLink = links.first(withMediaType: .djvu) {
+            return URL(string: djvuLink.href)
+        }
+        if let djvuZipLink = links.first(withMediaType: .djvuZip) {
+            return URL(string: djvuZipLink.href)
+        }
         return nil
     }
     
