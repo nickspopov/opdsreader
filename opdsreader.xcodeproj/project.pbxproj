@@ -20,6 +20,7 @@
 		4B55A7BC2962F0EF004F5D48 /* ReadiumOPDS in Frameworks */ = {isa = PBXBuildFile; productRef = 4B55A7BB2962F0EF004F5D48 /* ReadiumOPDS */; };
 		4B55A7C02962F70B004F5D48 /* OpdsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7BF2962F70B004F5D48 /* OpdsService.swift */; };
 		4B55A7C32962FC00004F5D48 /* SearchScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55A7C22962FC00004F5D48 /* SearchScreenViewModel.swift */; };
+		4B8102112971CCB100A7BC2B /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8102102971CCB100A7BC2B /* View+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		4B55A7BD2962F464004F5D48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4B55A7BF2962F70B004F5D48 /* OpdsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpdsService.swift; sourceTree = "<group>"; };
 		4B55A7C22962FC00004F5D48 /* SearchScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScreenViewModel.swift; sourceTree = "<group>"; };
+		4B8102102971CCB100A7BC2B /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 		4B55A7A52962EF20004F5D48 /* opdsreader */ = {
 			isa = PBXGroup;
 			children = (
+				4B81020F2971CC8C00A7BC2B /* Extensions */,
 				4B1C86A3296B227B00759BA9 /* Components */,
 				4B2D4AEF2968DECE00F82DFC /* Screens */,
 				4B55A7C12962FBE0004F5D48 /* ViewModels */,
@@ -126,6 +129,14 @@
 				4B55A7C22962FC00004F5D48 /* SearchScreenViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		4B81020F2971CC8C00A7BC2B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4B8102102971CCB100A7BC2B /* View+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,6 +219,7 @@
 			files = (
 				4B1C86A5296B228E00759BA9 /* SearchItem.swift in Sources */,
 				4B55A7AC2962EF20004F5D48 /* opdsreader.xcdatamodeld in Sources */,
+				4B8102112971CCB100A7BC2B /* View+Extension.swift in Sources */,
 				4B55A7A72962EF20004F5D48 /* opdsreaderApp.swift in Sources */,
 				4B55A7AE2962EF20004F5D48 /* ContentView.swift in Sources */,
 				4B2D4AF32968DF2D00F82DFC /* BookDetailsScreen.swift in Sources */,

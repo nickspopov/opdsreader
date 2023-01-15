@@ -17,6 +17,12 @@ struct BookDetailsScreen: View {
         dismiss()
     }
     
+    func onDownload() {
+        if let _link = book.link {
+            UIApplication.shared.open(_link)
+        }
+    }
+    
     var body: some View {
         VStack {
             HStack{
@@ -26,16 +32,6 @@ struct BookDetailsScreen: View {
                 }
             }
             .padding()
-            HStack{
-                Spacer()
-                Image(systemName: "square.and.arrow.down")
-                    .frame(width: 40, height: 40)
-                    .onTapGesture {
-                        if let _link = book.link {
-                            UIApplication.shared.open(_link)
-                        }
-                    }
-            }
             ScrollView{
                 if book.image != nil {
                     CachedAsyncImage(
@@ -52,6 +48,11 @@ struct BookDetailsScreen: View {
                 }
                 Text(book.title)
                     .font(.title)
+                Button(action: onDownload) {
+                    Text("Download")
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(book.link == nil)
                 VStack(alignment: .leading){
                     HStack {
                         Text(book.description ?? "No description")
@@ -65,6 +66,12 @@ struct BookDetailsScreen: View {
                     maxHeight: .infinity
                 )
                 .padding()
+                VStack{
+                    ForEach(book.allLinks ?? [], id: \.absoluteString) { _link in
+                        Text(_link.absoluteString)
+                            .hAlign(.leading)
+                    }
+                }.padding()
             }
         }
     }
@@ -85,7 +92,7 @@ struct BookDetailsScreen_Previews: PreviewProvider {
                         link: URL(string: "https://google.com"),
                         allLinks: [
                             URL(string: "https://google.com")!,
-                            URL(string: "https://google.com")!,
+                            URL(string: "https://google22222222.com")!,
                         ]
                     )
                 )

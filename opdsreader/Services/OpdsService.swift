@@ -12,7 +12,7 @@ import R2Shared
 struct Book: Identifiable, Equatable {
     var id = UUID()
     var title: String
-    var author: String?
+    var authorName: String?
     var image: URL?
     var description: String?
     var link: URL?
@@ -70,7 +70,7 @@ class OpdsService {
                     let bookArray = parseData?.feed?.publications.map {
                         Book(
                             title: $0.metadata.title.trimmingCharacters(in: .whitespacesAndNewlines),
-                            author: OpdsService.getAuthor(authors: $0.metadata.authors),
+                            authorName: OpdsService.getAuthor(authors: $0.metadata.authors),
                             image: ($0.images.first != nil) ? URL(string: $0.images[0].href) : nil,
                             description: $0.metadata.description ?? "No description",
                             link: OpdsService.getDownloadLink(links: $0.links),

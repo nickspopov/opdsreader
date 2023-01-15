@@ -42,8 +42,8 @@ struct SearchItem: View {
                         Text(book.title)
                             .foregroundColor(.primary)
                             .lineLimit(2)
-                        if book.author != nil {
-                            Text(book.author ?? "")
+                        if book.authorName != nil {
+                            Text(book.authorName ?? "")
                                 .font(.system(size: 12))
                                 .foregroundColor(.primary.opacity(0.4))
                                 .lineLimit(1)
@@ -70,14 +70,14 @@ struct SearchItem_Previews: PreviewProvider {
             SearchItem(
                 book: Book(
                     title: "Short title",
-                    author: "Short Author"
+                    authorName: "Short Author"
                 ),
                 onTapItem: {book in }
             )
             SearchItem(
                 book: Book(
                     title: "Short title",
-                    author: "Short Author",
+                    authorName: "Short Author",
                     image: URL(string: "https://picsum.photos/200")!
                 ),
                 onTapItem: {book in }
@@ -85,7 +85,7 @@ struct SearchItem_Previews: PreviewProvider {
             SearchItem(
                 book: Book(
                     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ",
-                    author: "Short Author",
+                    authorName: "Short Author",
                     image: URL(string: "https://picsum.photos/200")!
                 ),
                 onTapItem: {book in }
@@ -93,7 +93,7 @@ struct SearchItem_Previews: PreviewProvider {
             SearchItem(
                 book: Book(
                     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ",
-                    author: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ",
+                    authorName: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ",
                     image: URL(string: "https://picsum.photos/200")!
                 ),
                 onTapItem: {book in }
@@ -101,7 +101,7 @@ struct SearchItem_Previews: PreviewProvider {
             SearchItem(
                 book: Book(
                     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ",
-                    author: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ",
+                    authorName: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ",
                     image: URL(string: "https://picsum.photos/200")!
                 ),
                 onTapItem: {book in }
