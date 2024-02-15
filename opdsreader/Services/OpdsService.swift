@@ -124,4 +124,41 @@ class OpdsService {
             completion(nil, NSError())
         }
     }
+    
+    var recursiveBooksContext: [Book] = []
+    
+    func getBooksByAuthor(authorLink: URL, strictUrl: Bool = false, completion: @escaping ([Book]?, NSError?) -> Void) {
+        let requestLink = strictUrl == false ? authorLink.absoluteString + "/alphabet" : authorLink.absoluteString
+        
+        if strictUrl == false {
+            recursiveBooksContext = []
+        }
+        
+        OPDS1Parser.parseURL(url: URL(string: requestLink)!) { [weak self] parseData, error in 
+            if(error != nil) {
+                completion(nil, NSError())
+            }
+            if(parseData != nil) {
+                let bookArray = parseData?.feed?.publications.map {
+                    Book(
+                        title: $0.metadata.title.trimmingCharacters(in: .whitespacesAndNewlines),
+                        authorName: OpdsService.getAuthor(authors: $0.metadata.authors),
+                        image: ($0.images.first != nil) ? URL(string: $0.images[0].href) : nil,
+                        description: $0.metadata.description ?? "No description",
+                        link: OpdsService.getDownloadLink(links: $0.links),
+                        allLinks: OpdsService.getAllLinks(links: $0.links)
+                    )
+                } ?? []
+                
+                if let nextLink = parseData?.feed?.links.first(where: { $0.rels.contains("next") }) {
+                    guard let self = self else { return }
+                    self.recursiveBooksContext = self.recursiveBooksContext + bookArray
+                    self.getBooksByAuthor(authorLink: URL(string: nextLink.href)!, strictUrl: true, completion: completion)
+                } else {
+                    guard let self = self else { return }
+                    completion(self.recursiveBooksContext + bookArray, nil)
+                }
+            }
+        }
+    }
 }
