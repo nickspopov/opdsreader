@@ -8,12 +8,20 @@
 import SwiftUI
 import Combine
 
+enum SearchBy {
+    case book, author
+}
 
 @MainActor class SearchScreenViewModel: ObservableObject {
-    @Published var list: [Book] = []
+    @Published var searchBy: SearchBy = .book
+    
+    @Published var booksList: [Book] = []
+    @Published var authorsList: [AuthorShort] = []
+    
     @Published var searchValue = ""
     @Published var loading = false
     @Published var fetchingMore = false
+    
     
     private var disposeBag = Set<AnyCancellable>()
 
@@ -33,10 +41,30 @@ import Combine
     }
     
     func search() {
+        switch searchBy {
+        case .book:
+            searchByBook()
+        case .author:
+            searchByAuthor()
+        }
+    }
+    
+    private func searchByAuthor() {
+        OpdsService.shared.searchByAuthor(searchQuery: self.searchValue) { authors, error in
+            DispatchQueue.main.async {
+                if(authors != nil) {
+                    self.authorsList = authors!
+                }
+                self.loading = false
+            }
+        }
+    }
+    
+    private func searchByBook() {
         OpdsService.shared.searchByTitle(searchQuery: self.searchValue) { books, error in
             DispatchQueue.main.async {
                 if(books != nil) {
-                    self.list = books!
+                    self.booksList = books!
                 }
                 self.loading = false
             }
@@ -44,7 +72,20 @@ import Combine
     }
     
     func fetchMore() {
-        let shouldFetchMore = self.list.count % 20 == 0 && !self.loading
+        switch searchBy {
+            case .book:
+                fetchMoreBooks()
+            case .author:
+                fetchMoreAuthors()
+        }
+    }
+    
+    private func fetchMoreAuthors() {
+        
+    }
+    
+    private func fetchMoreBooks() {
+        let shouldFetchMore = self.booksList.count % 20 == 0 && !self.loading
         
         if !shouldFetchMore {
             return
@@ -52,12 +93,12 @@ import Combine
         
         self.fetchingMore = true
         
-        let nextPageNumber = self.list.count / 20 + 1
+        let nextPageNumber = self.booksList.count / 20 + 1
         
         OpdsService.shared.searchByTitle(searchQuery: self.searchValue, pageNumber: nextPageNumber) { books, error in
             DispatchQueue.main.async {
                 if(books != nil) {
-                    self.list.append(contentsOf: books!)
+                    self.booksList.append(contentsOf: books!)
                 }
                 self.fetchingMore = false
             }

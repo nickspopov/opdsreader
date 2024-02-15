@@ -19,6 +19,12 @@ struct Book: Identifiable, Equatable {
     var allLinks: [URL]?
 }
 
+struct AuthorShort: Identifiable, Equatable {
+    var id = UUID()
+    var name: String
+    var link: URL?
+}
+
 class OpdsService {
     static public var shared = OpdsService()
     
@@ -66,7 +72,7 @@ class OpdsService {
         
         if let _searchQuery =  searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             
-            let requestLink = "http://flibusta.net/opds/opensearch?searchType=books" + "&pageNumber=" + String(pageNumber) + "&searchTerm=" + _searchQuery
+            let requestLink = "http://flibusta.net/opds/search?searchType=books" + "&pageNumber=" + String(pageNumber) + "&searchTerm=" + _searchQuery
             
             OPDS1Parser.parseURL(url: URL(string: requestLink)!) { parseData, error in
                 if(error != nil) {
@@ -89,6 +95,33 @@ class OpdsService {
         } else {
             completion(nil, NSError())
         }
-
+    }
+    
+    func searchByAuthor(searchQuery: String, pageNumber: Int = 0, completion: @escaping ([AuthorShort]?, NSError?) -> Void) {
+        
+        if let _searchQuery =  searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            
+            // http://flibusta.is/opds/search?searchType=authors&searchTerm=оруэл
+            // http://flibusta.is/opds/author/9162/alphabet
+            
+            let requestLink = "http://flibusta.net/opds/search?searchType=authors" + "&pageNumber=" + String(pageNumber) + "&searchTerm=" + _searchQuery
+            
+            OPDS1Parser.parseURL(url: URL(string: requestLink)!) { parseData, error in
+                if(error != nil) {
+                    completion(nil, NSError())
+                }
+                if(parseData != nil) {
+                    let authorsArray = parseData?.feed?.navigation.map {
+                        AuthorShort(
+                            name: $0.title ?? "No name",
+                            link: URL(string: $0.href)
+                        )
+                    } ?? []
+                    completion(authorsArray, nil)
+                }
+            }
+        } else {
+            completion(nil, NSError())
+        }
     }
 }
