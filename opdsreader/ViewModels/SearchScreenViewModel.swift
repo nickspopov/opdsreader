@@ -20,13 +20,15 @@ enum SearchBy {
     
     @Published var searchValue = ""
     @Published var loading = false
+    @Published var loadingAuthors = false
     @Published var fetchingMore = false
     
     
     private var disposeBag = Set<AnyCancellable>()
 
     init() {
-        self.search()
+        self.searchByBook()
+        self.searchByAuthor()
         self.debounceTextChanges()
     }
 
@@ -34,7 +36,6 @@ enum SearchBy {
         $searchValue
             .debounce(for: 0.2, scheduler: RunLoop.main)
             .sink { _ in
-                self.loading = true
                 self.search()
             }
             .store(in: &disposeBag)
@@ -50,17 +51,19 @@ enum SearchBy {
     }
     
     private func searchByAuthor() {
+        self.loadingAuthors = true
         OpdsService.shared.searchByAuthor(searchQuery: self.searchValue) { authors, error in
             DispatchQueue.main.async {
                 if(authors != nil) {
                     self.authorsList = authors!
                 }
-                self.loading = false
+                self.loadingAuthors = false
             }
         }
     }
     
     private func searchByBook() {
+        self.loading = true
         OpdsService.shared.searchByTitle(searchQuery: self.searchValue) { books, error in
             DispatchQueue.main.async {
                 if(books != nil) {

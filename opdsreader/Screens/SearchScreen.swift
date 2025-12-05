@@ -11,100 +11,109 @@ import ReadiumOPDS
 
 struct SearchScreen: View {
     @StateObject var viewModel = SearchScreenViewModel()
-    
+
     @State var detailsBook: Book? = nil
     @State var detailsAuthor: AuthorShort? = nil
-    
+
     func onTapItem(_ book: Book) {
         detailsBook = book
     }
-    
+
     func onTapAuthor(_ author: AuthorShort) {
         detailsAuthor = author
     }
-    
+
     var body: some View {
-        NavigationStack {
-            ScrollView{
-                LazyVStack(pinnedViews: [.sectionHeaders]) {
-                    Section {
-                        switch viewModel.searchBy {
-                        case .book:
-                            if viewModel.loading == false {
-                                LazyVStack {
-                                    ForEach(viewModel.booksList) { _item in
-                                        SearchItem(book: _item, onTapItem: onTapItem)
-                                            .onAppear {
-                                                if viewModel.booksList.last == _item {
-                                                    viewModel.fetchMore()
-                                                }
-                                            }
-                                            .padding(.bottom, 10)
-                                            .overlay(
-                                                EdgeBorder(width: 0.2, edges: [.bottom]).foregroundColor(.gray)
-                                            )
+        TabView {
+            // Books Tab
+            NavigationStack {
+                ScrollView {
+                    LazyVStack {
+                        if viewModel.loading && !viewModel.fetchingMore {
+                            ProgressView()
+                        } else {
+                            ForEach(viewModel.booksList) { _item in
+                                SearchItem(book: _item, onTapItem: onTapItem)
+                                    .onAppear {
+                                        if viewModel.booksList.last == _item {
+                                            viewModel.fetchMore()
+                                        }
                                     }
-                                }
-                                .padding()
-                                .background(Color(UIColor.secondarySystemGroupedBackground))
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .padding()
-                                if viewModel.fetchingMore {
-                                    ProgressView()
-                                        .frame(width: 40, height: 40)
-                                }
-                            } else {
-                                ProgressView()
+                                    .padding(.bottom, 10)
+                                    .overlay(
+                                        EdgeBorder(width: 0.2, edges: [.bottom]).foregroundColor(.gray)
+                                    )
                             }
-                        case .author:
-                            if viewModel.loading == false {
-                                LazyVStack {
-                                    ForEach(viewModel.authorsList) { _item in
-                                        AuthorSearchItem(author: _item, onTapItem: onTapAuthor)
-                                            .onAppear {
-                                                if viewModel.authorsList.last == _item {
-                                                    viewModel.fetchMore()
-                                                }
-                                            }
-                                            .padding(.bottom, 10)
-                                            .overlay(
-                                                EdgeBorder(width: 0.2, edges: [.bottom]).foregroundColor(.gray)
-                                            )
-                                    }
-                                }
-                                .padding()
-                                .background(Color(UIColor.secondarySystemGroupedBackground))
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .padding()
-                                if viewModel.fetchingMore {
-                                    ProgressView()
-                                        .frame(width: 40, height: 40)
-                                }
-                            } else {
+                            if viewModel.fetchingMore && !viewModel.booksList.isEmpty {
                                 ProgressView()
+                                    .frame(width: 40, height: 40)
                             }
                         }
-                    } header: {
-                        Picker("What is your favorite color?", selection: $viewModel.searchBy) {
-                            Text("Book").tag(SearchBy.book)
-                            Text("Author").tag(SearchBy.author)
-                        }
-                        .padding()
-                        .pickerStyle(.segmented)
-                        .background(.background)
                     }
+                    .padding()
+                    .background(Color(UIColor.secondarySystemGroupedBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding()
                 }
+                .scrollDismissesKeyboard(.immediately)
+                .navigationTitle("Books")
             }
-//            .frame(maxHeight: .infinity, alignment: .top)
-            .navigationTitle("Search")
+            .tabItem {
+                Label("Books", systemImage: "book")
+            }
+            // Book details sheet
             .sheet(item: $detailsBook) { _detailsBook in
                 BookDetailsScreen(book: _detailsBook)
             }
+            .onAppear {
+                viewModel.searchBy = .book
+            }
+
+            // Authors Tab
+            NavigationStack {
+                ScrollView {
+                    LazyVStack {
+                        if viewModel.loadingAuthors {
+                            ProgressView()
+                        } else {
+                            ForEach(viewModel.authorsList) { _item in
+                                AuthorSearchItem(author: _item, onTapItem: onTapAuthor)
+                                    .onAppear {
+                                        if viewModel.authorsList.last == _item {
+                                            viewModel.fetchMore()
+                                        }
+                                    }
+                                    .padding(.bottom, 10)
+                                    .overlay(
+                                        EdgeBorder(width: 0.2, edges: [.bottom]).foregroundColor(.gray)
+                                    )
+                            }
+                            if viewModel.fetchingMore && !viewModel.authorsList.isEmpty {
+                                ProgressView()
+                                    .frame(width: 40, height: 40)
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color(UIColor.secondarySystemGroupedBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding()
+                }
+                .navigationTitle("Authors")
+            }
+            .tabItem {
+                Label("Authors", systemImage: "person.2")
+            }
+            // Author details sheet
             .sheet(item: $detailsAuthor) { _detailsAuthor in
                 AuthorDetailsScreen(author: _detailsAuthor)
             }
+            .onAppear {
+                viewModel.searchBy = .author
+            }
         }
         .searchable(text: $viewModel.searchValue)
+        
     }
 }
 
@@ -130,3 +139,4 @@ struct EdgeBorder: Shape {
         }.reduce(into: Path()) { $0.addPath($1) }
     }
 }
+
