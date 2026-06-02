@@ -42,6 +42,7 @@ struct SearchItem: View {
                         Text(book.title)
                             .foregroundColor(.primary)
                             .lineLimit(2)
+                            .multilineTextAlignment(.leading)
                         if book.authorName != nil {
                             Text(book.authorName ?? "")
                                 .font(.system(size: 12))
@@ -60,7 +61,7 @@ struct SearchItem_Previews: PreviewProvider {
     func onTapItem(_ book: Book) {}
     
     static var previews: some View {
-        List {
+        List{
             SearchItem(
                 book: Book(
                     title: "Short title"

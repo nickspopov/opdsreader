@@ -19,6 +19,12 @@ struct Book: Identifiable, Equatable {
     var allLinks: [URL]?
 }
 
+struct AuthorShort: Identifiable, Equatable {
+    var id = UUID()
+    var name: String
+    var link: URL?
+}
+
 class OpdsService {
     static public var shared = OpdsService()
     
@@ -66,7 +72,7 @@ class OpdsService {
         
         if let _searchQuery =  searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             
-            let requestLink = "http://flibusta.net/opds/opensearch?searchType=books" + "&pageNumber=" + String(pageNumber) + "&searchTerm=" + _searchQuery
+            let requestLink = "http://flibusta.net/opds/search?searchType=books" + "&pageNumber=" + String(pageNumber) + "&searchTerm=" + _searchQuery
             
             OPDS1Parser.parseURL(url: URL(string: requestLink)!) { parseData, error in
                 if(error != nil) {
@@ -89,6 +95,70 @@ class OpdsService {
         } else {
             completion(nil, NSError())
         }
-
+    }
+    
+    func searchByAuthor(searchQuery: String, pageNumber: Int = 0, completion: @escaping ([AuthorShort]?, NSError?) -> Void) {
+        
+        if let _searchQuery =  searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            
+            // http://flibusta.is/opds/search?searchType=authors&searchTerm=оруэл
+            // http://flibusta.is/opds/author/9162/alphabet
+            
+            let requestLink = "http://flibusta.net/opds/search?searchType=authors" + "&pageNumber=" + String(pageNumber) + "&searchTerm=" + _searchQuery
+            
+            OPDS1Parser.parseURL(url: URL(string: requestLink)!) { parseData, error in
+                if(error != nil) {
+                    completion(nil, NSError())
+                }
+                if(parseData != nil) {
+                    let authorsArray = parseData?.feed?.navigation.map {
+                        AuthorShort(
+                            name: $0.title ?? "No name",
+                            link: URL(string: $0.href)
+                        )
+                    } ?? []
+                    completion(authorsArray, nil)
+                }
+            }
+        } else {
+            completion(nil, NSError())
+        }
+    }
+    
+    var recursiveBooksContext: [Book] = []
+    
+    func getBooksByAuthor(authorLink: URL, strictUrl: Bool = false, completion: @escaping ([Book]?, NSError?) -> Void) {
+        let requestLink = strictUrl == false ? authorLink.absoluteString + "/alphabet" : authorLink.absoluteString
+        
+        if strictUrl == false {
+            recursiveBooksContext = []
+        }
+        
+        OPDS1Parser.parseURL(url: URL(string: requestLink)!) { [weak self] parseData, error in 
+            if(error != nil) {
+                completion(nil, NSError())
+            }
+            if(parseData != nil) {
+                let bookArray = parseData?.feed?.publications.map {
+                    Book(
+                        title: $0.metadata.title.trimmingCharacters(in: .whitespacesAndNewlines),
+                        authorName: OpdsService.getAuthor(authors: $0.metadata.authors),
+                        image: ($0.images.first != nil) ? URL(string: $0.images[0].href) : nil,
+                        description: $0.metadata.description ?? "No description",
+                        link: OpdsService.getDownloadLink(links: $0.links),
+                        allLinks: OpdsService.getAllLinks(links: $0.links)
+                    )
+                } ?? []
+                
+                if let nextLink = parseData?.feed?.links.first(where: { $0.rels.contains("next") }) {
+                    guard let self = self else { return }
+                    self.recursiveBooksContext = self.recursiveBooksContext + bookArray
+                    self.getBooksByAuthor(authorLink: URL(string: nextLink.href)!, strictUrl: true, completion: completion)
+                } else {
+                    guard let self = self else { return }
+                    completion(self.recursiveBooksContext + bookArray, nil)
+                }
+            }
+        }
     }
 }
