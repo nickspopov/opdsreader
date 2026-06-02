@@ -5,11 +5,15 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#000000",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.nickpopov.opdsreader",
+      "bundleIdentifier": "com.nickpopov.opdsreaderexpotesttesttest",
+      "backgroundColor": "#000000",
+      "userInterfaceStyle": "dark",
       "infoPlist": {
+        "UIUserInterfaceStyle": "Dark",
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
         }
@@ -22,10 +26,13 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.nickpopov.opdsreader",
+      "userInterfaceStyle": "dark"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": ["expo-system-ui"]
   }
 }
