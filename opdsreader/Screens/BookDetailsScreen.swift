@@ -59,7 +59,7 @@ struct BookDetailsScreen: View {
                 .disabled(book.link == nil)
                 VStack(alignment: .leading){
                     HStack {
-                        Text(book.description ?? "No description")
+                        Text((book.description ?? "No description").strippingHTML())
                             .font(.body)
                             .multilineTextAlignment(.leading)
                         Spacer()
