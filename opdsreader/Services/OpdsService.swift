@@ -68,97 +68,57 @@ class OpdsService {
         return authorsString
     }
     
-    func searchByTitle(searchQuery: String, pageNumber: Int = 0, completion: @escaping ([Book]?, NSError?) -> Void) {
-        
-        if let _searchQuery =  searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            
-            let requestLink = "http://flibusta.net/opds/search?searchType=books" + "&pageNumber=" + String(pageNumber) + "&searchTerm=" + _searchQuery
-            
-            OPDS1Parser.parseURL(url: URL(string: requestLink)!) { parseData, error in
-                if(error != nil) {
-                    completion(nil, NSError())
-                }
-                if(parseData != nil) {
-                    let bookArray = parseData?.feed?.publications.map {
-                        Book(
-                            title: $0.metadata.title.trimmingCharacters(in: .whitespacesAndNewlines),
-                            authorName: OpdsService.getAuthor(authors: $0.metadata.authors),
-                            image: ($0.images.first != nil) ? URL(string: $0.images[0].href) : nil,
-                            description: $0.metadata.description ?? "No description",
-                            link: OpdsService.getDownloadLink(links: $0.links),
-                            allLinks: OpdsService.getAllLinks(links: $0.links)
-                        )
-                    } ?? []
-                    completion(bookArray, nil)
-                }
-            }
-        } else {
-            completion(nil, NSError())
-        }
+    /// Default catalog: Standard Ebooks (public domain, OPDS 1.2, OpenSearch on `all?query=`).
+    static let catalogBase = "https://standardebooks.org/feeds/opds"
+    static let pageSize = 12
+
+    private static func searchURL(query: String, pageNumber: Int) -> URL? {
+        guard let q = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
+        return URL(string: "\(catalogBase)/all?query=\(q)&per-page=\(pageSize)&page=\(pageNumber + 1)")
     }
-    
-    func searchByAuthor(searchQuery: String, pageNumber: Int = 0, completion: @escaping ([AuthorShort]?, NSError?) -> Void) {
-        
-        if let _searchQuery =  searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            
-            // http://flibusta.is/opds/search?searchType=authors&searchTerm=оруэл
-            // http://flibusta.is/opds/author/9162/alphabet
-            
-            let requestLink = "http://flibusta.net/opds/search?searchType=authors" + "&pageNumber=" + String(pageNumber) + "&searchTerm=" + _searchQuery
-            
-            OPDS1Parser.parseURL(url: URL(string: requestLink)!) { parseData, error in
-                if(error != nil) {
-                    completion(nil, NSError())
-                }
-                if(parseData != nil) {
-                    let authorsArray = parseData?.feed?.navigation.map {
-                        AuthorShort(
-                            name: $0.title ?? "No name",
-                            link: URL(string: $0.href)
-                        )
-                    } ?? []
-                    completion(authorsArray, nil)
-                }
-            }
-        } else {
-            completion(nil, NSError())
-        }
+
+    private static func book(from publication: Publication) -> Book {
+        Book(
+            title: publication.metadata.title.trimmingCharacters(in: .whitespacesAndNewlines),
+            authorName: getAuthor(authors: publication.metadata.authors),
+            image: publication.images.first.flatMap { URL(string: $0.href) },
+            description: publication.metadata.description ?? "No description",
+            link: getDownloadLink(links: publication.links),
+            allLinks: getAllLinks(links: publication.links)
+        )
     }
-    
-    var recursiveBooksContext: [Book] = []
-    
-    func getBooksByAuthor(authorLink: URL, strictUrl: Bool = false, completion: @escaping ([Book]?, NSError?) -> Void) {
-        let requestLink = strictUrl == false ? authorLink.absoluteString + "/alphabet" : authorLink.absoluteString
-        
-        if strictUrl == false {
-            recursiveBooksContext = []
-        }
-        
-        OPDS1Parser.parseURL(url: URL(string: requestLink)!) { [weak self] parseData, error in 
-            if(error != nil) {
+
+    private func fetchBooks(url: URL?, completion: @escaping ([Book]?, NSError?) -> Void) {
+        guard let url = url else { completion(nil, NSError()); return }
+        OPDS1Parser.parseURL(url: url) { parseData, error in
+            if error != nil {
                 completion(nil, NSError())
+                return
             }
-            if(parseData != nil) {
-                let bookArray = parseData?.feed?.publications.map {
-                    Book(
-                        title: $0.metadata.title.trimmingCharacters(in: .whitespacesAndNewlines),
-                        authorName: OpdsService.getAuthor(authors: $0.metadata.authors),
-                        image: ($0.images.first != nil) ? URL(string: $0.images[0].href) : nil,
-                        description: $0.metadata.description ?? "No description",
-                        link: OpdsService.getDownloadLink(links: $0.links),
-                        allLinks: OpdsService.getAllLinks(links: $0.links)
-                    )
-                } ?? []
-                
-                if let nextLink = parseData?.feed?.links.first(where: { $0.rels.contains("next") }) {
-                    guard let self = self else { return }
-                    self.recursiveBooksContext = self.recursiveBooksContext + bookArray
-                    self.getBooksByAuthor(authorLink: URL(string: nextLink.href)!, strictUrl: true, completion: completion)
-                } else {
-                    guard let self = self else { return }
-                    completion(self.recursiveBooksContext + bookArray, nil)
-                }
-            }
+            let books = parseData?.feed?.publications.map(OpdsService.book(from:)) ?? []
+            completion(books, nil)
         }
+    }
+
+    func searchByTitle(searchQuery: String, pageNumber: Int = 0, completion: @escaping ([Book]?, NSError?) -> Void) {
+        fetchBooks(url: OpdsService.searchURL(query: searchQuery, pageNumber: pageNumber), completion: completion)
+    }
+
+    /// The catalog has no author navigation feed, so authors are derived from the books matching the query.
+    func searchByAuthor(searchQuery: String, pageNumber: Int = 0, completion: @escaping ([AuthorShort]?, NSError?) -> Void) {
+        fetchBooks(url: OpdsService.searchURL(query: searchQuery, pageNumber: pageNumber)) { books, error in
+            guard let books = books else { completion(nil, error); return }
+            var seen = Set<String>()
+            let authors: [AuthorShort] = books.compactMap { book in
+                guard let name = book.authorName?.trimmingCharacters(in: .whitespaces), !name.isEmpty, !seen.contains(name) else { return nil }
+                seen.insert(name)
+                return AuthorShort(name: name, link: OpdsService.searchURL(query: name, pageNumber: 0))
+            }
+            completion(authors, nil)
+        }
+    }
+
+    func getBooksByAuthor(authorLink: URL, completion: @escaping ([Book]?, NSError?) -> Void) {
+        fetchBooks(url: authorLink, completion: completion)
     }
 }
